@@ -61,13 +61,13 @@ int CMainView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  Add your specialized creation code here
-	if (!m_wndSplitter.CreateStatic(this, 2, 1))
-	{
-		return FALSE;
-	}
-
-	m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CView1), CSize(200, 200), NULL);
-	m_wndSplitter.CreateView(1, 0, RUNTIME_CLASS(CView2), CSize(200, 200), NULL);
+// 	if (!m_wndSplitter.CreateStatic(this, 2, 1))
+// 	{
+// 		return FALSE;
+// 	}
+// 
+// 	m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CView1), CSize(200, 200), NULL);
+// 	m_wndSplitter.CreateView(1, 0, RUNTIME_CLASS(CView2), CSize(200, 200), NULL);
 	return 0;
 }
 

@@ -113,6 +113,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MainView.cpp" />
+    <ClCompile Include="SpaceDlg.cpp" />
     <ClCompile Include="SpaceDll.cpp" />
     <ClCompile Include="SpcMainFrm.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +130,7 @@
     <ClInclude Include="BottomPane.h" />
     <ClInclude Include="MainView.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SpaceDlg.h" />
     <ClInclude Include="SpcMainFrm.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StockCountDlg.h" />

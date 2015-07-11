@@ -66,6 +66,12 @@
     <ClInclude Include="NetConfigDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RTButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ATrade.cpp">
@@ -110,6 +116,12 @@
     <ClCompile Include="NetConfigDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RTButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ATrade.rc">
@@ -130,6 +142,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\btn.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

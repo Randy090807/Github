@@ -7,6 +7,8 @@
 
 #define ID_REPORT_CONTROL 0x100
 #define ID_REPORT_CONTROL2 0x101
+
+
 //
 class CLev2Reord : public CXTPReportRecord
 {
@@ -94,6 +96,10 @@ BEGIN_MESSAGE_MAP(CMainView, CFormView)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
 	ON_WM_CTLCOLOR()
+	ON_WM_HOTKEY()
+	ON_WM_ACTIVATE()
+	ON_WM_MOVING()
+	ON_WM_MOVE()
 END_MESSAGE_MAP()
 
 
@@ -181,6 +187,12 @@ int CMainView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
 	m_wndReport2.AddColumn(pColumn);
 
+	//
+	m_dlgTrade.Create(this);
+	m_dlgTrade.SetOwner(this);
+	m_dlgTrade.ShowWindow(SW_HIDE);
+	//
+
 	LoadData();
 	return 0;
 }
@@ -198,6 +210,25 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 	if (m_wndReport2.GetSafeHwnd())
 	{
 		m_wndReport2.MoveWindow(300, 70, cx - 300, cy - 70);
+	}
+
+	if ( m_dlgTrade.GetSafeHwnd())
+	{
+		CRect rcThis, rcParent;
+		GetWindowRect(&rcParent);
+		ClientToScreen(rcThis);
+
+		m_dlgTrade.GetWindowRect(rcThis);
+		
+		int width = rcThis.Width();
+		int height = rcThis.Height();
+
+		rcThis.top = rcParent.bottom - height - 20;
+		rcThis.left = rcParent.left+20;
+		rcThis.bottom = rcThis.top + height;
+		rcThis.right = rcThis.left + width;
+
+		m_dlgTrade.MoveWindow(rcThis);
 	}
 }
 
@@ -254,4 +285,60 @@ void CMainView::LoadData()
 		m_wndReport2.AddRecord(pRecord);
 	}
 	m_wndReport2.Populate();
+}
+
+
+void CMainView::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	// TODO: Add your message handler code here and/or call default
+	
+	CFormView::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
+
+
+void CMainView::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CFormView::OnActivate(nState, pWndOther, bMinimized);
+
+	// TODO: Add your message handler code here
+	
+}
+
+void CMainView::ShowTrade(int iMode)
+{
+	m_dlgTrade.SetMode(iMode);
+	m_dlgTrade.Show();
+	m_dlgTrade.SetFocus();	
+}
+
+
+void CMainView::OnMoving(UINT fwSide, LPRECT pRect)
+{
+	CFormView::OnMoving(fwSide, pRect);
+
+	// TODO: Add your message handler code here
+	
+}
+
+
+void CMainView::OnMove(int x, int y)
+{
+	CFormView::OnMove(x, y);
+
+	// TODO: Add your message handler code here
+	CRect rcThis, rcParent;
+	GetWindowRect(&rcParent);
+	ClientToScreen(rcThis);
+
+	m_dlgTrade.GetWindowRect(rcThis);
+
+	int width = rcThis.Width();
+	int height = rcThis.Height();
+
+	rcThis.top = rcParent.bottom - height - 20;
+	rcThis.left = rcParent.left + 20;
+	rcThis.bottom = rcThis.top + height;
+	rcThis.right = rcThis.left + width;
+
+	m_dlgTrade.MoveWindow(rcThis);
 }

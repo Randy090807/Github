@@ -4,4 +4,4 @@
 
 #include "stdafx.h"
 
-
+#pragma comment(lib,"Public.lib")

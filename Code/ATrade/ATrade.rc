@@ -401,6 +401,17 @@ BEGIN
     LTEXT           "行情源端口：",IDC_STATIC,35,90,49,8
 END
 
+IDD_MAINDLG DIALOGEX 0, 0, 577, 28
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Level2",IDC_BTN_LEVEL2,"Button",BS_OWNERDRAW | WS_TABSTOP,77,7,50,14
+    CONTROL         "交易记录",IDC_BTN_RECORD,"Button",BS_OWNERDRAW | WS_TABSTOP,143,7,50,14
+    CONTROL         "仓位",IDC_BTN_SPACE,"Button",BS_OWNERDRAW | WS_TABSTOP,209,7,50,14
+    CONTROL         "配置",IDC_BTN_CONFIG,"Button",BS_OWNERDRAW | WS_TABSTOP,275,7,50,14
+    CONTROL         "退出",IDC_BTN_EXIT,"Button",BS_OWNERDRAW | WS_TABSTOP,341,7,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -519,6 +530,14 @@ BEGIN
         RIGHTMARGIN, 268
         TOPMARGIN, 7
         BOTTOMMARGIN, 139
+    END
+
+    IDD_MAINDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 570
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 21
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -821,6 +840,14 @@ BEGIN
     0
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDB_BACKGROUND          PNG                     "res\\background.png"
+IDB_BOTTON              PNG                     "res\\btn.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //

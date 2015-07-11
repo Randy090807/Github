@@ -114,6 +114,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MainView.cpp" />
+    <ClCompile Include="RecordDlg.cpp" />
     <ClCompile Include="RrdMainFrm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainView.h" />
+    <ClInclude Include="RecordDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RrdMainFrm.h" />
     <ClInclude Include="stdafx.h" />

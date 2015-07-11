@@ -19,7 +19,8 @@ class CATradeApp : public CWinAppEx
 public:
 	CATradeApp();
 
-
+	GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
 // ÖØÐ´
 public:
 	virtual BOOL InitInstance();

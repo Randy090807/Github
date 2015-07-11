@@ -48,6 +48,10 @@
 #define IDD_LOGIN                       321
 #define IDD_DIALOG1                     323
 #define IDD_NET_CONFIG                  323
+#define IDD_MAINDLG                     324
+#define IDB_BACKGROUND                  326
+#define IDB_PNG1                        327
+#define IDB_BOTTON                      327
 #define IDC_TAB                         1000
 #define IDC_LIST                        1001
 #define IDC_COMBO1                      1002
@@ -59,13 +63,17 @@
 #define IDC_EDIT_COUNT                  1007
 #define IDC_EDIT3                       1007
 #define IDC_EDIT2                       1008
+#define IDC_BTN_RECORD                  1008
 #define IDC_BUTTON2                     1009
 #define IDC_EDIT_UPDOWN                 1009
 #define IDC_EDIT4                       1009
+#define IDC_BTN_SPACE                   1009
 #define IDC_BUTTON3                     1010
 #define IDC_EDIT_LEFTRIGHT              1010
 #define IDC_EDIT5                       1010
+#define IDC_BTN_CONFIG                  1010
 #define IDC_BTN_MODIFY                  1011
+#define IDC_BTN_EXIT                    1011
 #define IDC_CLRBTN_16                   1013
 #define IDC_CLRBTN_27                   1014
 #define IDC_CLRBTN_COLOR                1014
@@ -86,14 +94,15 @@
 #define IDC_BTN_COMFIRM                 1022
 #define IDC_CHK_MEMERY                  1023
 #define IDC_BTN_NETCONFIG               1024
+#define IDC_BTN_LEVEL2                  1025
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        324
+#define _APS_NEXT_RESOURCE_VALUE        328
 #define _APS_NEXT_COMMAND_VALUE         316
-#define _APS_NEXT_CONTROL_VALUE         1025
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

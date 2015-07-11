@@ -4,6 +4,7 @@
 // stdafx.obj 将包含预编译类型信息
 
 #include "stdafx.h"
+#pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib,"Level2Dll.lib")
 #pragma comment(lib,"RecordDll.lib")
 #pragma comment(lib,"SpaceDll.lib")

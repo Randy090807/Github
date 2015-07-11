@@ -12,6 +12,7 @@
 #include "ATradeDoc.h"
 #include "ATradeView.h"
 #include "LoginDlg.h"
+#include "MainDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -88,11 +89,16 @@ BOOL CATradeApp::InitInstance()
 	SetRegistryKey(_T("ATRADE_V1.0"));
 	LoadStdProfileSettings(4);  // 加载标准 INI 文件选项(包括 MRU)
 
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
 	CLoginDlg dlg;
 	if ( dlg.DoModal() != IDOK)
 	{
 		return 0;
 	}
+
+	
+
 
 	InitContextMenuManager();
 
@@ -115,14 +121,18 @@ BOOL CATradeApp::InitInstance()
 // 		return FALSE;
 // 	AddDocTemplate(pDocTemplate);
 
+
+	CMainDlg mainDlg;
+	mainDlg.DoModal();
+
 	// 创建主 MDI 框架窗口
-	CMainFrame* pMainFrame = new CMainFrame;
-	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
-	{
-		delete pMainFrame;
-		return FALSE;
-	}
-	m_pMainWnd = pMainFrame;
+// 	CMainFrame* pMainFrame = new CMainFrame;
+// 	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
+// 	{
+// 		delete pMainFrame;
+// 		return FALSE;
+// 	}
+// 	m_pMainWnd = pMainFrame;
 
 
 	// 分析标准 shell 命令、DDE、打开文件操作的命令行
@@ -136,8 +146,8 @@ BOOL CATradeApp::InitInstance()
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 	// 主窗口已初始化，因此显示它并对其进行更新
-	pMainFrame->ShowWindow(m_nCmdShow);
-	pMainFrame->UpdateWindow();
+// 	pMainFrame->ShowWindow(m_nCmdShow);
+// 	pMainFrame->UpdateWindow();
 
 	return TRUE;
 }
@@ -146,6 +156,8 @@ int CATradeApp::ExitInstance()
 {
 	//TODO:  处理可能已添加的附加资源
 	AfxOleTerm(FALSE);
+
+	GdiplusShutdown(gdiplusToken);
 
 	return CWinAppEx::ExitInstance();
 }
