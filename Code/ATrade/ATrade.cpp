@@ -6,13 +6,10 @@
 #include "afxwinappex.h"
 #include "afxdialogex.h"
 #include "ATrade.h"
-#include "MainFrm.h"
-
-#include "ChildFrm.h"
-#include "ATradeDoc.h"
-#include "ATradeView.h"
 #include "LoginDlg.h"
 #include "MainDlg.h"
+#include "../Public/Config.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,14 +88,15 @@ BOOL CATradeApp::InitInstance()
 
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
+	// 初始化配置信息
+	CConfig::Inst();
+
+
 	CLoginDlg dlg;
 	if ( dlg.DoModal() != IDOK)
 	{
 		return 0;
 	}
-
-	
-
 
 	InitContextMenuManager();
 
@@ -121,6 +119,7 @@ BOOL CATradeApp::InitInstance()
 // 		return FALSE;
 // 	AddDocTemplate(pDocTemplate);
 
+	
 
 	CMainDlg mainDlg;
 	mainDlg.DoModal();

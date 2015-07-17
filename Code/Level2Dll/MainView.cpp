@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "MainView.h"
+#include "../Public/Config.h"
+#include "../Public/MsgDefine.h"
 
 #define ID_REPORT_CONTROL 0x100
 #define ID_REPORT_CONTROL2 0x101
@@ -25,23 +27,23 @@ public:
 		{
 		case 0:
 		case 5:
-			pItemMetrics->clrBackground = RGB(255, 0, 0);
+			pItemMetrics->clrBackground = CConfig::Inst()->Level2Info()->clrBid16;
 			break;
 		case 1:
 		case 6:
-			pItemMetrics->clrBackground = RGB(128, 192, 203);
+			pItemMetrics->clrBackground = CConfig::Inst()->Level2Info()->clrBid27;
 			break;
 		case 2:
 		case 7:
-			pItemMetrics->clrBackground = RGB(255, 218, 185);
+			pItemMetrics->clrBackground = CConfig::Inst()->Level2Info()->clrBid38;
 			break;
 		case 3:
 		case 8:
-			pItemMetrics->clrBackground = RGB(218, 165, 32);
+			pItemMetrics->clrBackground = CConfig::Inst()->Level2Info()->clrBid49;
 			break;
 		case 4:
 		case 9:
-			pItemMetrics->clrBackground = RGB(255, 255, 0);
+			pItemMetrics->clrBackground = CConfig::Inst()->Level2Info()->clrBid510;
 			break;
 		}
 		
@@ -100,6 +102,9 @@ BEGIN_MESSAGE_MAP(CMainView, CFormView)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVING()
 	ON_WM_MOVE()
+	ON_CBN_SELCHANGE(IDC_CB_CODE, &CMainView::OnCbnSelchangeCbCode)
+	ON_COMMAND(1/*IDC_CB_CODE*/, &CMainView::OnComBoEditComplete)
+	ON_MESSAGE(UM_NOTIFY_CONFIG_REFRESH, &CMainView::OnConfigRefreshNotify)
 END_MESSAGE_MAP()
 
 
@@ -188,9 +193,9 @@ int CMainView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndReport2.AddColumn(pColumn);
 
 	//
-	m_dlgTrade.Create(this);
-	m_dlgTrade.SetOwner(this);
-	m_dlgTrade.ShowWindow(SW_HIDE);
+// 	m_dlgTrade.Create(this);
+// 	m_dlgTrade.SetOwner(this);
+// 	m_dlgTrade.ShowWindow(SW_HIDE);
 	//
 
 	LoadData();
@@ -212,24 +217,24 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		m_wndReport2.MoveWindow(300, 70, cx - 300, cy - 70);
 	}
 
-	if ( m_dlgTrade.GetSafeHwnd())
-	{
-		CRect rcThis, rcParent;
-		GetWindowRect(&rcParent);
-		ClientToScreen(rcThis);
-
-		m_dlgTrade.GetWindowRect(rcThis);
-		
-		int width = rcThis.Width();
-		int height = rcThis.Height();
-
-		rcThis.top = rcParent.bottom - height - 20;
-		rcThis.left = rcParent.left+20;
-		rcThis.bottom = rcThis.top + height;
-		rcThis.right = rcThis.left + width;
-
-		m_dlgTrade.MoveWindow(rcThis);
-	}
+// 	if ( m_dlgTrade.GetSafeHwnd())
+// 	{
+// 		CRect rcThis, rcParent;
+// 		GetWindowRect(&rcParent);
+// 		ClientToScreen(rcThis);
+// 
+// 		m_dlgTrade.GetWindowRect(rcThis);
+// 		
+// 		int width = rcThis.Width();
+// 		int height = rcThis.Height();
+// 
+// 		rcThis.top = rcParent.bottom - height - 20;
+// 		rcThis.left = rcParent.left+20;
+// 		rcThis.bottom = rcThis.top + height;
+// 		rcThis.right = rcThis.left + width;
+// 
+// 		m_dlgTrade.MoveWindow(rcThis);
+// 	}
 }
 
 
@@ -306,9 +311,18 @@ void CMainView::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 
 void CMainView::ShowTrade(int iMode)
 {
-	m_dlgTrade.SetMode(iMode);
-	m_dlgTrade.Show();
-	m_dlgTrade.SetFocus();	
+// 	m_dlgTrade.SetMode(iMode);
+// 	m_dlgTrade.Show();
+// 	m_dlgTrade.SetFocus();	
+	CLevel2Info::CHotKeySet* pHKS = CConfig::Inst()->Level2Info()->Item(iMode);
+
+	CTradeDlg dlg(this);
+	CTradeInfo tradeInfo;
+	dlg.SetInfo( &tradeInfo);
+	if (dlg.DoModal() == IDOK)
+	{
+
+	}
 }
 
 
@@ -326,19 +340,77 @@ void CMainView::OnMove(int x, int y)
 	CFormView::OnMove(x, y);
 
 	// TODO: Add your message handler code here
-	CRect rcThis, rcParent;
-	GetWindowRect(&rcParent);
-	ClientToScreen(rcThis);
+// 	CRect rcThis, rcParent;
+// 	GetWindowRect(&rcParent);
+// 	ClientToScreen(rcThis);
+// 
+// 	m_dlgTrade.GetWindowRect(rcThis);
+// 
+// 	int width = rcThis.Width();
+// 	int height = rcThis.Height();
+// 
+// 	rcThis.top = rcParent.bottom - height - 20;
+// 	rcThis.left = rcParent.left + 20;
+// 	rcThis.bottom = rcThis.top + height;
+// 	rcThis.right = rcThis.left + width;
+// 
+// 	m_dlgTrade.MoveWindow(rcThis);
+}
 
-	m_dlgTrade.GetWindowRect(rcThis);
 
-	int width = rcThis.Width();
-	int height = rcThis.Height();
+void CMainView::OnCbnSelchangeCbCode()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	
+	CString szText;
+	m_cbCode.GetLBText(m_cbCode.GetCurSel(), szText);
+	szText = szText + _T(" - ") + CConfig::Inst()->StockInfo()->CodeToName(szText);
+	GetParent()->SetWindowText(szText);
 
-	rcThis.top = rcParent.bottom - height - 20;
-	rcThis.left = rcParent.left + 20;
-	rcThis.bottom = rcThis.top + height;
-	rcThis.right = rcThis.left + width;
 
-	m_dlgTrade.MoveWindow(rcThis);
+	// 刷新数据
+}
+
+void CMainView::OnComBoEditComplete()
+{
+	// 更新标题
+	CString szText;
+	m_cbCode.GetWindowText(szText);
+	szText.Trim();
+
+	BOOL bFind = FALSE;
+	for (int i = 0; i < m_cbCode.GetCount(); i++)
+	{
+		CString szItem;
+		m_cbCode.GetLBText(i, szItem);
+		if ( szText == szItem)
+		{
+			bFind = TRUE;
+			break;
+		}
+	}
+	if ( bFind == FALSE)
+	{
+		m_cbCode.AddString(szText);
+	}
+	
+	szText = szText + _T(" - ") + CConfig::Inst()->StockInfo()->CodeToName(szText);
+	GetParent()->SetWindowText(szText);
+
+
+}
+
+void CMainView::CancelOrder()
+{
+	if ( IDYES == MessageBox(_T("确认撤销最近一次订单?"),_T("提示"),MB_YESNO|MB_ICONQUESTION))
+	{
+
+	}
+}
+
+LRESULT CMainView::OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam)
+{
+	m_wndReport.RedrawControl();
+	return 0;
 }

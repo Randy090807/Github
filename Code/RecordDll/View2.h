@@ -23,15 +23,17 @@ public:
 
 	CXTPReportControl	m_wndReport;
 	void LoadData();
+	void SaveOrder();
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
+	virtual void OnInitialUpdate();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
-	virtual void OnInitialUpdate();
+	afx_msg void OnReportItemRClick(NMHDR* pNotifyStruct, LRESULT *);
+	afx_msg LRESULT OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam);
 };
-
 

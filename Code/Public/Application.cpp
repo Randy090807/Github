@@ -56,9 +56,9 @@ CString CApplication::AppTempDir()
 	return CString( StrCat(buf, _T("\\Temp")));
 }
 
-CString CApplication::ConfigDir()
+CString CApplication::DataDir()
 {
 	TCHAR buf[MAX_PATH];
 	StrCpy( buf, MainDir());
-	return CString( StrCat(buf, _T("\\Config")));
+	return CString( StrCat(buf, _T("\\Data")));
 }

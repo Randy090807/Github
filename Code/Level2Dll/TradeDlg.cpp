@@ -5,6 +5,7 @@
 #include "TradeDlg.h"
 #include "afxdialogex.h"
 #include "Resource.h"
+#include "../Public/Config.h"
 // CTradeDlg dialog
 
 IMPLEMENT_DYNAMIC(CTradeDlg, CDialogEx)
@@ -12,7 +13,7 @@ IMPLEMENT_DYNAMIC(CTradeDlg, CDialogEx)
 CTradeDlg::CTradeDlg(CWnd* pParent /*=NULL*/)
 : CDialogEx(IDD_TRADE/*CTradeDlg::IDD*/, pParent)
 	, m_dbPrice(23.49)
-	, m_nCount(12)
+	, m_nCount(1000)
 	, m_szTip(_T(""))
 {
 
@@ -37,6 +38,7 @@ BEGIN_MESSAGE_MAP(CTradeDlg, CDialogEx)
 	ON_WM_CTLCOLOR()
 	ON_WM_MOVING()
 	ON_WM_SETFOCUS()
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -46,7 +48,26 @@ BOOL CTradeDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	CWnd* pWnd = GetParent();
+	CRect rc;
+	pWnd->GetWindowRect(&rc);
 
+	CRect rcThis, rcParent;
+	pWnd->GetWindowRect(&rcParent);
+	pWnd->ClientToScreen(rcThis);
+
+	GetWindowRect(rcThis);
+
+	int width = rcThis.Width();
+	int height = rcThis.Height();
+
+	rcThis.top = rcParent.bottom - height - 20;
+	rcThis.left = rcParent.left + 20;
+	rcThis.bottom = rcThis.top + height;
+	rcThis.right = rcThis.left + width;
+
+	MoveWindow(rcThis);
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -72,7 +93,7 @@ static CString g_Tips[] =
 void CTradeDlg::SetMode(int i)
 {
 	m_szTip = g_Tips[i];
-	UpdateData(FALSE);
+//	UpdateData(FALSE);
 }
 
 BOOL CTradeDlg::Create(CWnd* pParentWnd /* = NULL */)
@@ -80,10 +101,14 @@ BOOL CTradeDlg::Create(CWnd* pParentWnd /* = NULL */)
 	return CDialogEx::Create(IDD_TRADE, pParentWnd);
 }
 
-void CTradeDlg::Show(BOOL bShow /*= TRUE*/)
+void CTradeDlg::Show(BOOL bShow /*= TRUE*/ , CTradeInfo* pTradeInfo/* = NULL*/)
 {
+	m_editPrice.SetUpDownScale(CConfig::Inst()->Level2Info()->dbUDSacle);
+	m_editPrice.SetLeftRightScale(CConfig::Inst()->Level2Info()->dbLRSacle);
+
 	if ( bShow)
 	{
+
 		ShowWindow(SW_SHOW);
 	}
 	else
@@ -117,4 +142,17 @@ void CTradeDlg::OnSetFocus(CWnd* pOldWnd)
 
 	// TODO: Add your message handler code here
 	GetDlgItem(IDC_EDIT_PRICE)->SetFocus();
+}
+
+
+void CTradeDlg::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: Add your message handler code here
+	// Do not call CDialogEx::OnPaint() for painting messages
+}
+
+void CTradeDlg::SetInfo(CTradeInfo* pTradeInfo)
+{
+	m_pTradeInfo = pTradeInfo;
 }

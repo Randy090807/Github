@@ -20,8 +20,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CString m_szUpDown;
-	CString m_szLeftRight;
+	double		m_dbUpDown;
+	double		m_dbLeftRight;
 	
 	virtual BOOL OnInitDialog();
 	CMFCColorButton m_ColorPicker16;
@@ -31,4 +31,6 @@ public:
 	CMFCColorButton m_ColorPicker510;
 	CMFCColorButton m_ColorPickerUp;
 	CMFCColorButton m_ColorPickerDown;
+	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedBtnModify();
 };

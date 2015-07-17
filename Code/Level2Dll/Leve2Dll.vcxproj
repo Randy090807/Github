@@ -20,14 +20,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -114,7 +114,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Lev2MainFrm.cpp" />
     <ClCompile Include="Leve2Dll.cpp" />
     <ClCompile Include="Level2Dlg.cpp" />
     <ClCompile Include="MainView.cpp" />
@@ -129,7 +128,6 @@
     <None Include="res\Leve2Dll.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Lev2MainFrm.h" />
     <ClInclude Include="Level2Dlg.h" />
     <ClInclude Include="MainView.h" />
     <ClInclude Include="Resource.h" />

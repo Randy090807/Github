@@ -1,3 +1,5 @@
 #pragma once
 
-#define UM_CLOSE_LEVEL2		WM_USER+0x100
+#define UM_CLOSE_LEVEL2					WM_USER+0x100
+
+#define UM_NOTIFY_CONFIG_REFRESH		WM_USER+0x200

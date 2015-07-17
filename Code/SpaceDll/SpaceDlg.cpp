@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CSpaceDlg, CDialogEx)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -98,4 +99,11 @@ BOOL CSpaceDlg::Create(CWnd* pParentWnd)
 {
 	return CDialogEx::Create(IDD_SPACE, pParentWnd);
 
+}
+
+void CSpaceDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	ShowWindow(SW_HIDE);
+//	CDialogEx::OnClose();
 }

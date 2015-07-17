@@ -4,11 +4,16 @@
 #include "stdafx.h"
 #include "RecordDlg.h"
 #include "afxdialogex.h"
-#include "MainView.h"
 #include "Resource.h"
 #include "View1.h"
 #include "View2.h"
+#include "../Public/Config.h"
+
 // CRecordDlg dialog
+
+#define ID_HOTKEY_ESC		0x105
+#define ID_HOTKEY_DELETE	0x106
+#define ID_HOTKEY_F10		0x107
 
 IMPLEMENT_DYNAMIC(CRecordDlg, CDialogEx)
 
@@ -33,6 +38,10 @@ BEGIN_MESSAGE_MAP(CRecordDlg, CDialogEx)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
+	ON_WM_CLOSE()
+	ON_WM_ACTIVATE()
+	ON_WM_HOTKEY()
+	ON_MESSAGE(UM_NOTIFY_CONFIG_REFRESH, &CRecordDlg::OnConfigRefreshNotify)
 END_MESSAGE_MAP()
 
 
@@ -119,4 +128,65 @@ void CRecordDlg::OnDestroy()
 BOOL CRecordDlg::Create(CWnd* pParentWnd /*= NULL*/)
 {
 	return CDialogEx::Create(IDD_RECORD, pParentWnd);
+}
+
+
+void CRecordDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+	ShowWindow(SW_HIDE);
+//	CDialogEx::OnClose();
+}
+
+
+void CRecordDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
+
+	// TODO: Add your message handler code here
+	if (nState == 0)
+	{
+		UnregisterHotKey(m_hWnd, ID_HOTKEY_DELETE);
+		UnregisterHotKey(m_hWnd, ID_HOTKEY_ESC);
+		UnregisterHotKey(m_hWnd, ID_HOTKEY_F10);
+	}
+	else
+	{
+		RegisterHotKey(m_hWnd, ID_HOTKEY_DELETE, 0, VK_DELETE);
+		RegisterHotKey(m_hWnd, ID_HOTKEY_ESC, 0, VK_ESCAPE);
+		RegisterHotKey(m_hWnd, ID_HOTKEY_F10, 0, VK_F10);
+	}
+}
+
+
+void CRecordDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	// TODO: Add your message handler code here and/or call default
+	if ( nHotKeyId == ID_HOTKEY_ESC)	// 单笔撤单或者批量撤单
+	{
+		CView1* pView = (CView1*)(m_wndSplitter.GetPane(0, 0));
+		pView->CancelOrder();
+	}
+	else if ( nHotKeyId == ID_HOTKEY_DELETE)	// 全部撤单
+	{
+		CView1* pView = (CView1*)(m_wndSplitter.GetPane(0, 0));
+		pView->ClearOrder();
+	}
+	else if (nHotKeyId == ID_HOTKEY_F10)	// 改单
+	{
+		CView1* pView = (CView1*)(m_wndSplitter.GetPane(0, 0));
+		pView->ModifyOrder();
+	}
+	CDialogEx::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
+
+LRESULT CRecordDlg::OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam)
+{
+	CWnd* pView = (m_wndSplitter.GetPane(0, 0));
+	::PostMessage(pView->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, wparam, lparam);
+
+	pView = (m_wndSplitter.GetPane(1, 0));
+	::PostMessage(pView->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, wparam, lparam);
+
+	return 0;
 }

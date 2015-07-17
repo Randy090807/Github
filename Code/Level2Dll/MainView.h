@@ -24,8 +24,9 @@ public:
 #endif
 
 	void ShowTrade(int iMode);
+	void CancelOrder();
 protected:
-	CTradeDlg	m_dlgTrade;
+//	CTradeDlg	m_dlgTrade;
 
 
 	short m_nDefault;
@@ -50,6 +51,9 @@ public:
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg void OnMoving(UINT fwSide, LPRECT pRect);
 	afx_msg void OnMove(int x, int y);
+	afx_msg void OnCbnSelchangeCbCode();
+	afx_msg void OnComBoEditComplete();
+	afx_msg LRESULT OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam);
 };
 
 

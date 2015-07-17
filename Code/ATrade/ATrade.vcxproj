@@ -19,14 +19,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -89,6 +89,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)twd.exe</OutputFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -106,13 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ATrade.h" />
-    <ClInclude Include="ATradeDoc.h" />
-    <ClInclude Include="ATradeView.h" />
-    <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ConfigDlg.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="MainDlg.h" />
-    <ClInclude Include="MainFrm.h" />
     <ClInclude Include="NetConfigDlg.h" />
     <ClInclude Include="Pane1.h" />
     <ClInclude Include="Pane2.h" />
@@ -126,13 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ATrade.cpp" />
-    <ClCompile Include="ATradeDoc.cpp" />
-    <ClCompile Include="ATradeView.cpp" />
-    <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ConfigDlg.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="MainDlg.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NetConfigDlg.cpp" />
     <ClCompile Include="Pane1.cpp" />
     <ClCompile Include="Pane2.cpp" />

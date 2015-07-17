@@ -1,7 +1,6 @@
 #pragma once
 #include "afxwin.h"
-
-#include "../Public/ShortcutEdit.h"
+#include "afxcmn.h"
 // CPane4 dialog
 
 class CPane4 : public CDialogEx
@@ -15,14 +14,20 @@ public:
 // Dialog Data
 	enum { IDD = IDD_PANE4 };
 
+	CHotKeyCtrl m_hotkeyCeDan;
+	CHotKeyCtrl m_hotkeyGaiDan;
+	CHotKeyCtrl m_hotkeyPiLiangCeDan;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CShortcutEdit m_EditCeDan;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	CShortcutEdit m_EditPiLiangCeDan;
-	CShortcutEdit m_EditGaiDan;
-	virtual BOOL OnInitDialog();
+	virtual BOOL OnInitDialog();	
+	afx_msg void OnBnClickedBtnModify1();
+	virtual void OnOK();
+	virtual void OnCancel();
+	afx_msg void OnBnClickedBtnModify2();
+	afx_msg void OnBnClickedBtnModify3();
 };

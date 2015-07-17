@@ -13,6 +13,7 @@
 #include "../Public/Application.h"
 #include "../Public/MsgDefine.h"
 #include <algorithm>
+#include "../Public/Config.h"
 // CMainDlg dialog
 
 #define ID_HOTKEY_PAGEUP	0x100
@@ -23,19 +24,23 @@ IMPLEMENT_DYNAMIC(CMainDlg, CDialogEx)
 CMainDlg::CMainDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMainDlg::IDD, pParent)
 	, m_pImageLogo(CApplication::ImageDir() + _T("\\logo.jpg"))
+	, m_pImage(CApplication::ImageDir() + _T("\\mainbg.png"))
 	, m_nLev2Idx(0)
+	, m_pWndRecord(NULL)
 {
-	PngFromIDResource(IDB_BACKGROUND, m_pImage);
-	
+//	PngFromIDResource(IDB_BACKGROUND, m_pImage);
 }
 
 CMainDlg::~CMainDlg()
 {
 	for (auto iter = m_Lev2Wnds.begin(); iter != m_Lev2Wnds.end(); ++iter)
 	{
-		delete (CWnd*)(*iter);
+		delete (*iter);
 	}
 	m_Lev2Wnds.clear();
+
+	delete m_pWndRecord;
+	delete m_pWndSpace;
 }
 
 void CMainDlg::DoDataExchange(CDataExchange* pDX)
@@ -75,10 +80,10 @@ BOOL CMainDlg::OnInitDialog()
 	// TODO:  Add extra initialization here
 	CRect rtClient;
 	GetWindowRect(rtClient);
-	rtClient.left += 50;
-	rtClient.right += 50;
-	rtClient.top += 50;
-	rtClient.bottom += 50;
+	rtClient.left += 10;
+	rtClient.right += 10;
+	rtClient.top += 10;
+	rtClient.bottom += 10;
 	m_hWndTop = ::GetForegroundWindow();
 	::SetWindowPos(/*m_hWndTop*/m_hWnd, HWND_TOPMOST, rtClient.left, rtClient.top, rtClient.Width(), rtClient.Height(), SWP_SHOWWINDOW);
 
@@ -105,29 +110,26 @@ void CMainDlg::OnPaint()
 	// Do not call CDialogEx::OnPaint() for painting messages
 	dc.SetBkMode(TRANSPARENT);
 	
-	if (m_pImage)
-	{
-		Graphics graphics(dc.GetSafeHdc());
-		CRect rcClient;
-		GetClientRect(&rcClient);
-
-		ImageAttributes ImgAtt;
-		ImgAtt.SetWrapMode(WrapModeTileFlipXY);
-
-		Rect rcDest;
-		rcDest.X = rcClient.left;
-		rcDest.Width = rcClient.Width();
-		rcDest.Y = rcClient.top;
-		rcDest.Height = rcClient.Height();
-		graphics.DrawImage(m_pImage, rcDest, 0, 0, m_pImage->GetWidth(), m_pImage->GetHeight(), UnitPixel, &ImgAtt);
-
-		rcDest.X = 2;
-		rcDest.Y = 2;
-		rcDest.Width = rcDest.Height = rcClient.Height()-4;
-		graphics.DrawImage(&m_pImageLogo, rcDest, 0, 0, m_pImageLogo.GetWidth(), m_pImageLogo.GetHeight(), UnitPixel, &ImgAtt);
-	}
 	
-	
+	Graphics graphics(dc.GetSafeHdc());
+	CRect rcClient;
+	GetClientRect(&rcClient);
+
+	ImageAttributes ImgAtt;
+	ImgAtt.SetWrapMode(WrapModeTileFlipXY);
+
+	Rect rcDest;
+	rcDest.X = rcClient.left;
+	rcDest.Width = rcClient.Width();
+	rcDest.Y = rcClient.top;
+	rcDest.Height = rcClient.Height();
+	graphics.DrawImage(&m_pImage, rcDest, 0, 0, m_pImage.GetWidth(), m_pImage.GetHeight(), UnitPixel, &ImgAtt);
+
+	rcDest.X = 2;
+	rcDest.Y = 2;
+	rcDest.Width = rcDest.Height = rcClient.Height() - 4;
+	graphics.DrawImage(&m_pImageLogo, rcDest, 0, 0, m_pImageLogo.GetWidth(), m_pImageLogo.GetHeight(), UnitPixel, &ImgAtt);
+
 }
 
 
@@ -139,17 +141,32 @@ int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  Add your specialized creation code here
 	RegisterHotKey(m_hWnd, ID_HOTKEY_PAGEUP, 0, VK_PRIOR);
 	RegisterHotKey(m_hWnd, ID_HOTKEY_PAGEDOWN, 0, VK_NEXT);
+
+	m_pWndRecord = new CRecordDlg();
+	m_pWndRecord->Create(this);
+	m_pWndRecord->SetOwner(this);
+	m_pWndRecord->ShowWindow(SW_HIDE);
+
+	m_pWndSpace = new CSpaceDlg();
+	m_pWndSpace->Create(this);
+	m_pWndSpace->SetOwner(this);
+	m_pWndSpace->ShowWindow(SW_HIDE);
+	
 	return 0;
 }
 
 
 void CMainDlg::OnDestroy()
 {
-	CDialogEx::OnDestroy();
 
+	CDialogEx::OnDestroy();
+	
 	// TODO: Add your message handler code here
+
 	UnregisterHotKey(m_hWnd, ID_HOTKEY_PAGEUP);
 	UnregisterHotKey(m_hWnd, ID_HOTKEY_PAGEDOWN);
+
+	CConfig::Inst()->Save();
 }
 
 
@@ -176,19 +193,19 @@ void CMainDlg::OnBnClickedBtnLevel2()
 void CMainDlg::OnBnClickedBtnRecord()
 {
 	// TODO: Add your control notification handler code here
-	CRecordDlg* dlg = new CRecordDlg();
-	dlg->Create(this);
-	dlg->SetOwner(this);
-	dlg->ShowWindow(SW_SHOW);
+	m_pWndRecord->ShowWindow(SW_SHOW);
+	m_pWndRecord->SetActiveWindow();
+	m_pWndRecord->SetFocus();
+	
 }
 
 
 void CMainDlg::OnBnClickedBtnSpace()
 {
 	// TODO: Add your control notification handler code here
-	CSpaceDlg* dlg = new CSpaceDlg();
-	dlg->Create(this);
-	dlg->ShowWindow(SW_SHOW);
+	m_pWndSpace->ShowWindow(SW_SHOW);
+	m_pWndSpace->SetActiveWindow();
+	m_pWndSpace->SetFocus();
 }
 
 
@@ -197,13 +214,20 @@ void CMainDlg::OnBnClickedBtnConfig()
 	// TODO: Add your control notification handler code here
 	CConfigDlg dlg;
 	dlg.DoModal();
+
+	::PostMessage(m_pWndSpace->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, 0, 0);
+	::PostMessage(m_pWndRecord->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, 0, 0);
+	for (auto iter = m_Lev2Wnds.begin(); iter != m_Lev2Wnds.end(); ++iter)
+	{
+		::PostMessage((*iter)->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, 0, 0);
+	}
 }
 
 
 void CMainDlg::OnBnClickedBtnExit()
 {
 	// TODO: Add your control notification handler code here
-	exit(0);
+	PostMessage(WM_CLOSE, 0, 0);
 }
 
 
@@ -222,7 +246,6 @@ LRESULT CMainDlg::OnMsgLevel2WndClose(WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
-
 void CMainDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 {
 	// TODO: Add your message handler code here and/or call default
@@ -231,7 +254,7 @@ void CMainDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		if (nHotKeyId == ID_HOTKEY_PAGEDOWN)	// ÏÂÒ»¸ö
 		{
 			m_nLev2Idx++;
-			if ( m_nLev2Idx >= m_Lev2Wnds.size())
+			if ( m_nLev2Idx >= (int)m_Lev2Wnds.size())
 			{
 				m_nLev2Idx = 0;
 			}

@@ -1,4 +1,5 @@
 #pragma once
+#include "afxwin.h"
 
 
 // CNetConfigDlg dialog
@@ -20,4 +21,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	CComboBox m_cbSvrIP;
+	CComboBox m_cbSvrPort;
+	CComboBox m_cbPriceIP;
+	CComboBox m_cbPricePort;
+	afx_msg void OnBnClickedOk();
 };

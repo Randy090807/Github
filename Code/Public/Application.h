@@ -30,6 +30,6 @@ public:
 	static CString ImageDir();
 	// 本程序临时目录,路径后没有'\'
 	static CString AppTempDir();
-	// 配置文件存放目录,路径后没有'\'
-	static CString ConfigDir();
+	// 数据文件存放目录,路径后没有'\'
+	static CString DataDir();
 };

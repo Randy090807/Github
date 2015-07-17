@@ -5,7 +5,8 @@
 using namespace std;
 
 // CMainDlg dialog
-
+class CRecordDlg;
+class CSpaceDlg;
 class CMainDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMainDlg)
@@ -20,12 +21,16 @@ public:
 	vector<CWnd*>	m_Lev2Wnds;
 	int				m_nLev2Idx;
 protected:
+	CRecordDlg* m_pWndRecord;
+	CSpaceDlg*  m_pWndSpace;
+
+
 	CRTButton m_btnLevel2;
 	CRTButton m_btnConfig;
 	CRTButton m_btnRecord;
 	CRTButton m_btnSpace;
 	CRTButton m_btnExit;
-	Gdiplus::Image*	m_pImage;
+	Gdiplus::Image	m_pImage;
 	Gdiplus::Image	m_pImageLogo;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 

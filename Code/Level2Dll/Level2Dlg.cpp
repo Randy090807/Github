@@ -7,12 +7,15 @@
 #include "MainView.h"
 #include "Resource.h"
 #include "../Public/MsgDefine.h"
+#include "../Public/Config.h"
+#include "../Public/Utility.h"
+
+
 // CLevel2Dlg dialog
 
-#define ID_HOTKEY_F1	0x100
-#define ID_HOTKEY_F2	0x101
-#define ID_HOTKEY_F3	0x102
-#define ID_HOTKEY_F4	0x103
+#define ID_HOTKEY_START	0x100
+#define ID_HOTKEY_END	0x120
+#define ID_HOTKEY_ESC	0x121
 
 IMPLEMENT_DYNAMIC(CLevel2Dlg, CDialogEx)
 
@@ -41,6 +44,7 @@ BEGIN_MESSAGE_MAP(CLevel2Dlg, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_MOVE()
 	ON_WM_CLOSE()
+	ON_MESSAGE(UM_NOTIFY_CONFIG_REFRESH, &CLevel2Dlg::OnConfigRefreshNotify)
 END_MESSAGE_MAP()
 
 
@@ -113,21 +117,15 @@ BOOL CLevel2Dlg::Create(CWnd* pParentWnd)
 void CLevel2Dlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 {
 	// TODO: Add your message handler code here and/or call default
-	switch (nHotKeyId)
+	if ( nHotKeyId >= ID_HOTKEY_START && nHotKeyId <= ID_HOTKEY_END)
 	{
-	case ID_HOTKEY_F1:
-		m_pView->ShowTrade(0);
-		break;
-	case ID_HOTKEY_F2:
-		m_pView->ShowTrade(1);
-		break;
-	case ID_HOTKEY_F3:
-		m_pView->ShowTrade(2);
-		break;
-	case ID_HOTKEY_F4:
-		m_pView->ShowTrade(3);
-		break;
+		m_pView->ShowTrade(nHotKeyId-ID_HOTKEY_START);
 	}
+	else if ( nHotKeyId == ID_HOTKEY_ESC)
+	{
+		m_pView->CancelOrder();
+	}
+
 	CDialogEx::OnHotKey(nHotKeyId, nKey1, nKey2);
 }
 
@@ -139,17 +137,22 @@ void CLevel2Dlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	// TODO: Add your message handler code here
 	if (nState == 0)
 	{
-		UnregisterHotKey(m_hWnd, ID_HOTKEY_F1);
-		UnregisterHotKey(m_hWnd, ID_HOTKEY_F2);
-		UnregisterHotKey(m_hWnd, ID_HOTKEY_F3);
-		UnregisterHotKey(m_hWnd, ID_HOTKEY_F4);
+		for (int i = 0; i < CConfig::Inst()->Level2Info()->HKSize(); i++)
+		{
+			UnregisterHotKey(m_hWnd, ID_HOTKEY_START + i);
+		}
+		UnregisterHotKey(m_hWnd, ID_HOTKEY_ESC);
 	}
 	else
 	{
-		RegisterHotKey(m_hWnd, ID_HOTKEY_F1, 0, VK_F1);
-		RegisterHotKey(m_hWnd, ID_HOTKEY_F2, 0, VK_F2);
-		RegisterHotKey(m_hWnd, ID_HOTKEY_F3, 0, VK_F3);
-		RegisterHotKey(m_hWnd, ID_HOTKEY_F4, 0, VK_F4);
+		for (int i = 0; i < CConfig::Inst()->Level2Info()->HKSize(); i++)
+		{
+			DWORD dwVK = 0, dwModifier = 0;
+			ParseHotKey(CConfig::Inst()->Level2Info()->Item(i)->HotKey, dwVK, dwModifier);
+			RegisterHotKey(m_hWnd, ID_HOTKEY_START+i, dwModifier, dwVK);
+		}
+		RegisterHotKey(m_hWnd, ID_HOTKEY_ESC, 0, VK_ESCAPE);
+		
 	}
 }
 
@@ -168,5 +171,11 @@ void CLevel2Dlg::OnClose()
 	// TODO: Add your message handler code here and/or call default
 	::PostMessage(GetOwner()->GetSafeHwnd(), UM_CLOSE_LEVEL2, (WPARAM)this, 0);
 	CDialogEx::OnClose();
+}
+
+LRESULT CLevel2Dlg::OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam)
+{
+	::PostMessage(m_pView->GetSafeHwnd(), UM_NOTIFY_CONFIG_REFRESH, wparam, lparam);
+	return 0;
 }
 

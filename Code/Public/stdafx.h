@@ -36,6 +36,6 @@
 #include <afxcmn.h>                     // MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment(lib, "gdiplus.lib")
+
+
+#include <XTToolkitPro.h>

@@ -49,8 +49,6 @@
 #define IDD_DIALOG1                     323
 #define IDD_NET_CONFIG                  323
 #define IDD_MAINDLG                     324
-#define IDB_BACKGROUND                  326
-#define IDB_PNG1                        327
 #define IDB_BOTTON                      327
 #define IDC_TAB                         1000
 #define IDC_LIST                        1001
@@ -95,6 +93,11 @@
 #define IDC_CHK_MEMERY                  1023
 #define IDC_BTN_NETCONFIG               1024
 #define IDC_BTN_LEVEL2                  1025
+#define IDC_HOTKEY1                     1026
+#define IDC_HOTKEY2                     1027
+#define IDC_STATIC_STATUS               1027
+#define IDC_HOTKEY3                     1028
+#define IDC_BTN_DELETE                  1028
 
 // Next default values for new objects
 // 
@@ -102,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        328
 #define _APS_NEXT_COMMAND_VALUE         316
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

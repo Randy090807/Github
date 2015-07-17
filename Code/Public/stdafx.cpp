@@ -3,5 +3,6 @@
 // stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"
-
+#pragma comment(lib,"TinyXml.lib")
+#pragma comment(lib, "gdiplus.lib")
 

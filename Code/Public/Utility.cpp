@@ -3,6 +3,8 @@
 #include "Utility.h"
 
 
+int _GetEncoderClsid(const WCHAR* format, CLSID* pClsid);
+
 BOOL PngFromIDResource( UINT nID, Image * & pImg )
 {
 	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(nID),_T("PNG"));
@@ -29,7 +31,7 @@ BOOL PngFromIDResource( UINT nID, Image * & pImg )
 	return TRUE;
 }
 
-AFX_EXT_API int _GetEncoderClsid( const WCHAR* format, CLSID* pClsid )
+int _GetEncoderClsid( const WCHAR* format, CLSID* pClsid )
 {
 	UINT  num = 0;          // number of image encoders
 	UINT  size = 0;         // size of the image encoder array in bytes
@@ -199,4 +201,144 @@ AFX_EXT_API BOOL SaveBitmapToFile(HBITMAP hBitmap, LPCTSTR lpFileName )
 	CloseHandle(fh); 
 
 	return TRUE; 
+}
+
+
+size_t g_f_wctou8(char * dest_str, const wchar_t src_wchar)
+{
+	int count_bytes = 0;
+	wchar_t byte_one = 0, byte_other = 0x3f; // 用于位与运算以提取位值0x3f--->00111111
+	unsigned char utf_one = 0, utf_other = 0x80; // 用于"位或"置标UTF-8编码0x80--->1000000
+	wchar_t tmp_wchar = L'0'; // 用于宽字符位置析取和位移(右移位)
+	unsigned char tmp_char = L'0';
+	if (!src_wchar)//
+		return (size_t)-1;
+	for (;;) // 检测字节序列长度
+	{
+		if (src_wchar <= 0x7f){ // <=01111111
+			count_bytes = 1; // ASCII字符: 0xxxxxxx( ~ 01111111)
+			byte_one = 0x7f; // 用于位与运算, 提取有效位值, 下同
+			utf_one = 0x0;
+			break;
+		}
+		if ((src_wchar > 0x7f) && (src_wchar <= 0x7ff)){ // <=0111,11111111
+			count_bytes = 2; // 110xxxxx 10xxxxxx[1](最多个位, 简写为*1)
+			byte_one = 0x1f; // 00011111, 下类推(1位的数量递减)
+			utf_one = 0xc0; // 11000000
+			break;
+		}
+		if ((src_wchar > 0x7ff) && (src_wchar <= 0xffff)){ //0111,11111111<=11111111,11111111
+			count_bytes = 3; // 1110xxxx 10xxxxxx[2](MaxBits: 16*1)
+			byte_one = 0xf; // 00001111
+			utf_one = 0xe0; // 11100000
+			break;
+		}
+		if ((src_wchar > 0xffff) && (src_wchar <= 0x1fffff)){ //对UCS-4的支持..
+			count_bytes = 4; // 11110xxx 10xxxxxx[3](MaxBits: 21*1)
+			byte_one = 0x7; // 00000111
+			utf_one = 0xf0; // 11110000
+			break;
+		}
+		if ((src_wchar > 0x1fffff) && (src_wchar <= 0x3ffffff)){
+			count_bytes = 5; // 111110xx 10xxxxxx[4](MaxBits: 26*1)
+			byte_one = 0x3; // 00000011
+			utf_one = 0xf8; // 11111000
+			break;
+		}
+		if ((src_wchar > 0x3ffffff) && (src_wchar <= 0x7fffffff)){
+			count_bytes = 6; // 1111110x 10xxxxxx[5](MaxBits: 31*1)
+			byte_one = 0x1; // 00000001
+			utf_one = 0xfc; // 11111100
+			break;
+		}
+		return (size_t)-1; // 以上皆不满足则为非法序列
+	}
+	// 以下几行析取宽字节中的相应位, 并分组为UTF-8编码的各个字节
+	tmp_wchar = src_wchar;
+	for (int i = count_bytes; i > 1; i--)
+	{ // 一个宽字符的多字节降序赋值
+		tmp_char = (unsigned char)(tmp_wchar & byte_other);///后位与byte_other 00111111
+		dest_str[i - 1] = (tmp_char | utf_other);/// 在前面加----跟或
+		tmp_wchar >>= 6;//右移位
+	}
+	//这个时候i=1
+	//对UTF-8第一个字节位处理，
+	//第一个字节的开头"1"的数目就是整个串中字节的数目
+	tmp_char = (unsigned char)(tmp_wchar & byte_one);//根据上面附值得来，有效位个数
+	dest_str[0] = (tmp_char | utf_one);//根据上面附值得来1的个数
+	// 位值析取分组__End!
+	return count_bytes;
+}
+
+CString UTF8ToUnicode(char* UTF8)
+{
+	CString strUnicode;        //返回值
+	if (UTF8 == NULL)
+		return strUnicode;
+
+	DWORD dwUnicodeLen;        //转换后Unicode的长度
+	TCHAR *pwText;            //保存Unicode的指针
+	
+	//获得转换后的长度，并分配内存
+	dwUnicodeLen = MultiByteToWideChar(CP_UTF8, 0, UTF8, -1, NULL, 0);
+	pwText = new TCHAR[dwUnicodeLen];
+	if (!pwText)
+	{
+		return strUnicode;
+	}
+	//转为Unicode
+	MultiByteToWideChar(CP_UTF8, 0, UTF8, -1, pwText, dwUnicodeLen);
+	//转为CString
+	strUnicode.Format(_T("%s"), pwText);
+	//清除内存
+	delete[]pwText;
+	//返回转换好的Unicode字串
+	return strUnicode;
+}
+
+std::string UnicodeToUTF8(CString& wstr)
+{
+	wchar_t wc = L'1';
+	char c[10] = "1";//申请一个缓存
+	size_t r = 0; //size_t unsigned integer Result of sizeof operator
+	int i = 0;
+	string sRet;
+	
+	for (i = 0; i < wstr.GetLength(); i++)
+	{
+		wc = wstr.GetAt(i);//得到一个宽字符
+		r = g_f_wctou8(c, wc);//将一个宽字符按UTF-8格式转换到p地址
+		if (r == -1)//出错判断
+			AfxMessageBox(_T("wcs_to_pchar error"));
+		sRet.push_back(c[0]);//第一个值附给p
+		if (r > 1)
+		{
+			for (size_t x = 1; x < r; x++)
+			{
+				sRet.push_back(c[x]);//第一个值附给p
+			}
+		}
+	}
+	
+	return sRet;
+}
+
+AFX_EXT_API void ParseHotKey(DWORD hotkey, DWORD& wVirtualKeyCode, DWORD& wModifiers)
+{
+	wVirtualKeyCode = LOBYTE(hotkey);
+	DWORD modifiertmp = HIBYTE(hotkey);
+	wModifiers = 0;
+
+	if (modifiertmp & HOTKEYF_SHIFT)
+	{
+		wModifiers &= MOD_SHIFT;
+	}
+	if (modifiertmp & HOTKEYF_CONTROL)
+	{
+		wModifiers &= MOD_CONTROL;
+	}
+	if (modifiertmp & HOTKEYF_ALT)
+	{
+		wModifiers &= MOD_ALT;
+	}
 }

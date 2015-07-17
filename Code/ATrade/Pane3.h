@@ -25,5 +25,9 @@ public:
 	CMFCColorButton m_ColorPicker;
 	CListCtrl m_wndList;
 	CString m_szCode;
-	CString m_szCount;
+	UINT	m_nCount;
+	afx_msg void OnBnClickedBtnAdd();
+	afx_msg void OnBnClickedBtnDelete();
+	afx_msg void OnDestroy();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

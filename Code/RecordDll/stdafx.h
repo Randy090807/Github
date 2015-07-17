@@ -38,3 +38,5 @@
 #include <afxcontrolbars.h>
 
 #include <XTToolkitPro.h>
+
+#include "../Public/MsgDefine.h"
