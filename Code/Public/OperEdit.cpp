@@ -51,10 +51,10 @@ void COperEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			value -= m_nLRScale;
 			break;
 		case VK_UP:
-			value -= m_nUDScale;
+			value += m_nUDScale;
 			break;
 		case VK_DOWN:
-			value += m_nUDScale;
+			value -= m_nUDScale;
 			break;
 		}
 		szText.Format(_T("%.2f"), value);

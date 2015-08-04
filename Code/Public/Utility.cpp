@@ -270,7 +270,7 @@ size_t g_f_wctou8(char * dest_str, const wchar_t src_wchar)
 	return count_bytes;
 }
 
-CString UTF8ToUnicode(char* UTF8)
+CString UTF8ToUnicode(const char* UTF8)
 {
 	CString strUnicode;        //·µ»ØÖµ
 	if (UTF8 == NULL)
@@ -341,4 +341,17 @@ AFX_EXT_API void ParseHotKey(DWORD hotkey, DWORD& wVirtualKeyCode, DWORD& wModif
 	{
 		wModifiers &= MOD_ALT;
 	}
+}
+
+AFX_EXT_API CString FormatTime(UINT t)
+{
+	CString szText, szRet;
+	szText.Format(_T("%u"), t);
+	szRet.Format(_T("%s:%s:%s.%s"), szText.Left(2), szText.Mid(2, 2), szText.Mid(4, 2), szText.Right(3));
+	return szRet;
+}
+
+AFX_EXT_API double PriceTrans(double price)
+{
+	return price / 10000.0;
 }

@@ -9,13 +9,15 @@
 #include "LoginDlg.h"
 #include "MainDlg.h"
 #include "../Public/Config.h"
-
+#include "SvrSocket.h"
+#include "PriceSocket.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
+extern CSvrSocket	g_SockSvr;
+extern CPriceSocket	g_SockPrice;
 // CATradeApp
 
 BEGIN_MESSAGE_MAP(CATradeApp, CWinAppEx)
@@ -31,7 +33,6 @@ END_MESSAGE_MAP()
 CATradeApp::CATradeApp()
 {
 	m_bHiColorIcons = TRUE;
-
 	// TODO:  将以下应用程序 ID 字符串替换为唯一的 ID 字符串；建议的字符串格式
 	//为 CompanyName.ProductName.SubProduct.VersionInformation
 	SetAppID(_T("ATrade.AppID.1.0"));
@@ -61,6 +62,7 @@ BOOL CATradeApp::InitInstance()
 
 	CWinAppEx::InitInstance();
 
+	AfxSocketInit();
 
 	// 初始化 OLE 库
 	if (!AfxOleInit())
@@ -135,15 +137,15 @@ BOOL CATradeApp::InitInstance()
 
 
 	// 分析标准 shell 命令、DDE、打开文件操作的命令行
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
-
-
-
-	// 调度在命令行中指定的命令。  如果
-	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
+// 	CCommandLineInfo cmdInfo;
+// 	ParseCommandLine(cmdInfo);
+// 
+// 
+// 
+// 	// 调度在命令行中指定的命令。  如果
+// 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
+// 	if (!ProcessShellCommand(cmdInfo))
+// 		return FALSE;
 	// 主窗口已初始化，因此显示它并对其进行更新
 // 	pMainFrame->ShowWindow(m_nCmdShow);
 // 	pMainFrame->UpdateWindow();
@@ -157,6 +159,9 @@ int CATradeApp::ExitInstance()
 	AfxOleTerm(FALSE);
 
 	GdiplusShutdown(gdiplusToken);
+
+	g_SockSvr.Close();
+	g_SockPrice.Close();
 
 	return CWinAppEx::ExitInstance();
 }
@@ -221,6 +226,5 @@ void CATradeApp::SaveCustomState()
 }
 
 // CATradeApp 消息处理程序
-
 
 

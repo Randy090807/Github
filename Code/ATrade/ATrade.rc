@@ -382,7 +382,7 @@ BEGIN
     RTEXT           "资产管理员-操作员：",IDC_STATIC,10,26,76,8
     RTEXT           "资产单元-交易单元：",IDC_STATIC,10,48,76,8
     RTEXT           "密码：",IDC_STATIC,10,70,76,8
-    LTEXT           "请登录",IDC_STATIC_STATUS,47,147,147,8
+    LTEXT           "请登录",IDC_STATIC_STATUS,16,147,199,8
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,15,139,279,1
 END
 

@@ -60,6 +60,12 @@
     <ClInclude Include="RTButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SvrSocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PriceSocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ATrade.cpp">
@@ -96,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RTButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SvrSocket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PriceSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

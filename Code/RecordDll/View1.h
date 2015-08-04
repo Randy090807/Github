@@ -1,7 +1,7 @@
 #pragma once
 
 
-
+#include "OrderReportCtrl.h"
 // CView1 form view
 
 class CView1 : public CFormView
@@ -20,19 +20,25 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 #endif
+	
 
-	CXTPReportControl	m_wndReport;
+	COrderReportCtrl	m_wndReport;
 	BOOL m_bCancelTip;
 	BOOL m_bWasteResend;
 	BOOL m_bErrorResend;
+	CWnd* m_pMsgReciver;
 
+	void SetMsgReciver(CWnd* pWnd);
+	void Update(COrderInquiryResultMsg* pMsg);
 
 	void LoadData();
 	void CancelOrder();
 	void ClearOrder();
 	void ModifyOrder();
 	void SaveOrder();
+	void NotifyUpdate();
 protected:
+	
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual void OnInitialUpdate();
 	DECLARE_MESSAGE_MAP()
@@ -47,6 +53,7 @@ public:
 	afx_msg void OnBnClickedChkCuodanchongfa();
 
 	afx_msg LRESULT OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam);
+	
 };
 
 

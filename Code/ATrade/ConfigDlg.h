@@ -39,4 +39,6 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg LRESULT OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam);
 };

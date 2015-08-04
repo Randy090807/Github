@@ -57,3 +57,4 @@ using namespace Gdiplus;
 #pragma comment(lib, "gdiplus.lib")
 
 #include <XTToolkitPro.h>
+#include <afxsock.h>

@@ -5,7 +5,7 @@
 #include "ATrade.h"
 #include "ConfigDlg.h"
 #include "afxdialogex.h"
-
+#include "../Public/MsgDefine.h"
 
 // CConfigDlg dialog
 
@@ -33,6 +33,8 @@ BEGIN_MESSAGE_MAP(CConfigDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB, &CConfigDlg::OnTcnSelchangeTab)
+	ON_MESSAGE(UM_SRV_DATA_NOTIFY, &CConfigDlg::OnMsgSrvDataNofity)
+	ON_MESSAGE(UM_SRV_DATA_REPORT, &CConfigDlg::OnMsgSrvDataReport)
 END_MESSAGE_MAP()
 
 
@@ -118,4 +120,26 @@ void CConfigDlg::OnTcnSelchangeTab(NMHDR *pNMHDR, LRESULT *pResult)
 	m_Pane4.ShowWindow(iTab == 3 ? SW_SHOW : SW_HIDE);
 	m_Pane5.ShowWindow(iTab == 4 ? SW_SHOW : SW_HIDE);
 	*pResult = 0;
+}
+
+LRESULT CConfigDlg::OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam)
+{
+	CBaseMsg* pMsg = (CBaseMsg*)wparam;
+	pMsg->Header.userdata = (UINT)this;
+	::PostMessage(GetOwner()->GetSafeHwnd(), UM_SRV_DATA_REPORT, wparam, lparam);
+	return 0;
+}
+
+LRESULT CConfigDlg::OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam)
+{
+	CBaseMsg* pBaseMsg = (CBaseMsg*)wparam;
+	if ( pBaseMsg->Header.type == ID_CHANGE_PASSWORD_RESULT)
+	{
+		::PostMessage(m_Pane5.GetSafeHwnd(), UM_SRV_DATA_NOTIFY, wparam, lparam);
+	}
+	else
+	{
+		delete pBaseMsg;
+	}
+	return 0;
 }

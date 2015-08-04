@@ -45,6 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\</OutDir>
+    <IncludePath>E:\code\Codejock\Source;E:\code\JsonCpp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -116,6 +117,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ModOrderDlg.cpp" />
+    <ClCompile Include="OrderReportCtrl.cpp" />
     <ClCompile Include="RecordDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -130,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModOrderDlg.h" />
+    <ClInclude Include="OrderReportCtrl.h" />
     <ClInclude Include="RecordDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

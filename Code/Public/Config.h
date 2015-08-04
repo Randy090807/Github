@@ -61,6 +61,7 @@ public:
 	~CStockInfo();
 
 	CString CodeToName(LPCTSTR code);
+	void Load(const char* buf, int len);
 protected:
 	void Load();
 	map<CString, CString>	mapDatas;

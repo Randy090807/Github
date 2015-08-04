@@ -4,14 +4,17 @@
 #include "stdafx.h"
 #include "StockCountDlg.h"
 #include "afxdialogex.h"
+#include "../Public/MsgDefine.h"
+#include "../Public/Config.h"
 
 #define ID_REPORT_CONTROL	0x110
 // CStockCountDlg dialog
 
 IMPLEMENT_DYNAMIC(CStockCountDlg, CDialogEx)
 
-CStockCountDlg::CStockCountDlg(CWnd* pParent /*=NULL*/)
+CStockCountDlg::CStockCountDlg(int nMode, CWnd* pParent /*=NULL*/)
 : CDialogEx(IDD_STOCKCOUNTDLG/*CStockCountDlg::IDD*/, pParent)
+, m_nMode(nMode)
 {
 
 }
@@ -31,6 +34,7 @@ BEGIN_MESSAGE_MAP(CStockCountDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_BTN_FREASH, &CStockCountDlg::OnBnClickedBtnFreash)
 END_MESSAGE_MAP()
 
 
@@ -65,15 +69,15 @@ int CStockCountDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
 	m_wndReport.AddColumn(pColumn);
 
-	for (int i = 0; i < 10; i++)
-	{
-		CXTPReportRecord* pRecord = new CXTPReportRecord();
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("000001")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("中国银行")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("928329")));
-		m_wndReport.AddRecord(pRecord);
-	}
-	m_wndReport.Populate();
+// 	for (int i = 0; i < 10; i++)
+// 	{
+// 		CXTPReportRecord* pRecord = new CXTPReportRecord();
+// 		pRecord->AddItem(new CXTPReportRecordItemText(_T("000001")));
+// 		pRecord->AddItem(new CXTPReportRecordItemText(_T("中国银行")));
+// 		pRecord->AddItem(new CXTPReportRecordItemText(_T("928329")));
+// 		m_wndReport.AddRecord(pRecord);
+// 	}
+// 	m_wndReport.Populate();
 
 	return 0;
 }
@@ -86,14 +90,19 @@ void CStockCountDlg::OnSize(UINT nType, int cx, int cy)
 	// TODO: Add your message handler code here
 	CWnd* pWnd = GetDlgItem(IDC_BTN_FREASH);
 	CRect rc;
-	int width;
+	
 	if (pWnd)
 	{
 		pWnd->GetWindowRect(&rc);
 		ScreenToClient(&rc);
-		width = rc.Width();
+		int width = rc.Width();
+		int height = rc.Height();
+
 		rc.right = cx - 10;
 		rc.left = rc.right - width;
+		rc.bottom = cy - 3;
+		rc.top = rc.bottom - height;
+
 		pWnd->MoveWindow(rc);
 	}
 
@@ -132,4 +141,39 @@ void CStockCountDlg::OnPaint()
 	GetClientRect(&rc);
 
 	dc.FillSolidRect(rc, RGB(255, 255, 255));
+}
+
+BOOL CStockCountDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+	{
+		return TRUE;
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CStockCountDlg::OnBnClickedBtnFreash()
+{
+	// TODO: Add your control notification handler code here
+	m_wndReport.ResetContent(TRUE);
+
+	if ( m_nMode == 0)	// 预约券查询
+	{
+		CBookingInquiryMsg* pMsg = new CBookingInquiryMsg();
+		::PostMessage(GetParent()->GetParent()->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+	}
+}
+
+void CStockCountDlg::Updata(CBookingInquiryResultMsg* pMsg)
+{
+	for (auto iter = pMsg->Secs.begin(); iter != pMsg->Secs.end(); ++iter)
+	{
+		CXTPReportRecord* pRecord = new CXTPReportRecord();
+		pRecord->AddItem(new CXTPReportRecordItemText( (*iter)->StockID));
+		pRecord->AddItem(new CXTPReportRecordItemText(CConfig::Inst()->StockInfo()->CodeToName((*iter)->StockID)));
+		pRecord->AddItem(new CXTPReportRecordItemNumber((*iter)->Volume));
+		m_wndReport.AddRecord(pRecord);
+	}
+	m_wndReport.Populate();
 }

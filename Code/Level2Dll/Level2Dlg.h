@@ -31,4 +31,9 @@ public:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnClose();
 	afx_msg LRESULT OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataNofity2(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport2(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgInitComplete(WPARAM wparam, LPARAM lparam);
 };

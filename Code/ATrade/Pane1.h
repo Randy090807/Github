@@ -41,4 +41,5 @@ public:
 	afx_msg void OnBnClickedBtnAdd();
 	afx_msg void OnBnClickedBtnModify();
 	afx_msg void OnBnClickedBtnDelete();
+	BOOL PreTranslateMessage(MSG* pMsg);
 };

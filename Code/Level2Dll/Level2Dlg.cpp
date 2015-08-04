@@ -45,6 +45,11 @@ BEGIN_MESSAGE_MAP(CLevel2Dlg, CDialogEx)
 	ON_WM_MOVE()
 	ON_WM_CLOSE()
 	ON_MESSAGE(UM_NOTIFY_CONFIG_REFRESH, &CLevel2Dlg::OnConfigRefreshNotify)
+	ON_MESSAGE(UM_SRV_DATA_NOTIFY, &CLevel2Dlg::OnMsgSrvDataNofity)
+	ON_MESSAGE(UM_SRV_DATA_REPORT, &CLevel2Dlg::OnMsgSrvDataReport)
+	ON_MESSAGE(UM_NOTIFY_INIT_COMPLETE, &CLevel2Dlg::OnMsgInitComplete)
+	ON_MESSAGE(UM_SRV_DATA_NOTIFY2, &CLevel2Dlg::OnMsgSrvDataNofity2)
+	ON_MESSAGE(UM_SRV_DATA_REPORT2, &CLevel2Dlg::OnMsgSrvDataReport2)
 END_MESSAGE_MAP()
 
 
@@ -60,7 +65,7 @@ BOOL CLevel2Dlg::OnInitDialog()
 	m_pView->Create(NULL, NULL, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), this, IDD_MAINVIEW, NULL);
 	m_pView->OnInitialUpdate();
 	m_pView->ShowWindow(SW_SHOW);
-
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -179,3 +184,36 @@ LRESULT CLevel2Dlg::OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
+LRESULT CLevel2Dlg::OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam)
+{
+	::PostMessage(m_pView->GetSafeHwnd(), UM_SRV_DATA_NOTIFY, wparam, lparam);
+	return 0;
+}
+
+LRESULT CLevel2Dlg::OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam)
+{
+	CBaseMsg* pMsg = (CBaseMsg*)wparam;
+	pMsg->Header.userdata = (UINT)this;
+	::PostMessage(GetOwner()->GetSafeHwnd(), UM_SRV_DATA_REPORT, wparam, lparam);
+	return 0;
+}
+
+LRESULT CLevel2Dlg::OnMsgInitComplete(WPARAM wparam, LPARAM lparam)
+{
+	::PostMessage(m_pView->GetSafeHwnd(), UM_NOTIFY_INIT_COMPLETE, wparam, lparam);
+	return 0;
+}
+
+LRESULT CLevel2Dlg::OnMsgSrvDataNofity2(WPARAM wparam, LPARAM lparam)
+{
+	::PostMessage(m_pView->GetSafeHwnd(), UM_SRV_DATA_NOTIFY2, wparam, lparam);
+	return 0;
+}
+
+LRESULT CLevel2Dlg::OnMsgSrvDataReport2(WPARAM wparam, LPARAM lparam)
+{
+	MsgHeader* Header = (MsgHeader*)wparam;
+	Header->userdata = (UINT)this;
+	::PostMessage(GetOwner()->GetSafeHwnd(), UM_SRV_DATA_REPORT2, wparam, lparam);
+	return 0;
+}

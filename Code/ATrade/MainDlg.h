@@ -1,12 +1,15 @@
 #pragma once
 #include "afxwin.h"
 #include "RTButton.h"
+#include "PriceSocket.h"
 #include <vector>
 using namespace std;
 
 // CMainDlg dialog
 class CRecordDlg;
 class CSpaceDlg;
+class CConfigDlg;
+class CBaseMsg;
 class CMainDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CMainDlg)
@@ -21,9 +24,11 @@ public:
 	vector<CWnd*>	m_Lev2Wnds;
 	int				m_nLev2Idx;
 protected:
+	CWnd* FindReciverWnd(CBaseMsg* pMsg);
+//	CPriceSocket	m_SockPrice;
 	CRecordDlg* m_pWndRecord;
 	CSpaceDlg*  m_pWndSpace;
-
+	CConfigDlg*	m_pWndConfig;
 
 	CRTButton m_btnLevel2;
 	CRTButton m_btnConfig;
@@ -50,4 +55,8 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg LRESULT OnMsgLevel2WndClose(WPARAM wparam, LPARAM lparam);
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+	afx_msg LRESULT OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataNofity2(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport2(WPARAM wparam, LPARAM lparam);
 };

@@ -33,4 +33,5 @@ public:
 	CMFCColorButton m_ColorPickerDown;
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedBtnModify();
+	BOOL PreTranslateMessage(MSG* pMsg);
 };

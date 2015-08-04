@@ -1,6 +1,8 @@
 #pragma once
 
-
+#define UM_SPCAE_DEAL_ALL		WM_USER+0x701
+#define UM_SPCAE_DEAL_EMPTY		WM_USER+0x702
+#define UM_SPCAE_DEAL_MORE		WM_USER+0x703
 
 // CBottomPane form view
 
@@ -22,6 +24,13 @@ public:
 #endif
 #endif
 
+	CString m_szNetPL;
+	CString m_szFloatPL;
+	CString m_szAmont;
+	CString m_szColsePL;
+	CString m_szVolume;
+	CString m_szFee;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
@@ -32,6 +41,12 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnPaint();
+	afx_msg void OnBnClickedBtnAll();
+	afx_msg void OnBnClickedBtnMore();
+	afx_msg void OnBnClickedBtnEmpty();
+	BOOL PreTranslateMessage(MSG* pMsg);
+
+	int m_nPrice;
 };
 
 

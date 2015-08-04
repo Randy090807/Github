@@ -598,7 +598,7 @@ CStockInfo::~CStockInfo()
 CString CStockInfo::CodeToName(LPCTSTR code)
 {
 	auto iter = mapDatas.find(code);
-	return iter == mapDatas.end() ? _T("Unkown") : iter->second;
+	return iter == mapDatas.end() ? _T("") : iter->second;
 }
 
 void CStockInfo::Load()
@@ -630,6 +630,11 @@ void CStockInfo::Load()
 		}
 	}
 
+}
+
+void CStockInfo::Load(const char* buf, int len)
+{
+	
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -11,10 +11,11 @@ CLogger::CLogger(void)
 #if USE_LOGGER
 	char filename[MAX_PATH] = {0};
 	COleDateTime dt(COleDateTime::GetCurrentTime());
-
-	sprintf( filename, "%s\\%04d%02d%02d%.txt", CApplication::LogDir(), 
+	
+	USES_CONVERSION;
+	sprintf( filename, "%s\\%04d%02d%02d.txt", T2A(CApplication::LogDir()), 
 		dt.GetYear(),dt.GetMonth(),dt.GetDay());
-	_f.open(filename, ios::out || ios::app);
+	_f.open(filename, ios::app );
 #endif
 }
 
@@ -60,6 +61,16 @@ void CLogger::Write( char* content, ... )
 	va_end( marker );              /* Reset variable arguments.      */
 	_f << endl;
 
+#endif
+}
+
+void CLogger::Write(LPCTSTR lpText)
+{
+#if USE_LOGGER
+	WriteHeader();
+
+	USES_CONVERSION;
+	_f << T2A(lpText)<< endl;
 #endif
 }
 

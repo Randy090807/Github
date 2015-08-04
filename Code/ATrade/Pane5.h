@@ -18,4 +18,12 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
+	afx_msg LRESULT OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataReport(WPARAM wparam, LPARAM lparam);
+public:
+	afx_msg void OnBnClickedBtnComfirm();
+	BOOL PreTranslateMessage(MSG* pMsg);
+	CString m_szOld;
+	CString m_szNew;
+	CString m_szNew2;
 };

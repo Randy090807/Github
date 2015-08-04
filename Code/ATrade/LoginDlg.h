@@ -34,6 +34,7 @@ protected:
 public:
 	afx_msg void OnBnClickedBtnNetconfig();
 	virtual BOOL OnInitDialog();
-	
 	afx_msg void OnBnClickedOk();
+	afx_msg LRESULT OnMsgSrvDataNofity(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMsgSrvDataNofity2(WPARAM wparam, LPARAM lparam);
 };

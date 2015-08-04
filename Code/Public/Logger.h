@@ -12,7 +12,7 @@ public:
 	static CLogger* Inst();
 	void WriteB( const char* content, int len );
 	void Write( char* content, ... );
-	
+	void Write(LPCTSTR lpText);
 protected:
 	void WriteHeader();
 	fstream	_f;

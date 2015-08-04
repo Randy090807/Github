@@ -249,3 +249,12 @@ void CPane1::UpdateItemToList(CLevel2Info::CHotKeySet* pHKS, int i)
 	m_wndList.SetItemText(i, 4L, pHKS->CountName());
 	m_wndList.SetItemText(i, 5L, pHKS->ReSendName());
 }
+BOOL CPane1::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+	{
+		return TRUE;
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

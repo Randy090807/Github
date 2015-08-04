@@ -66,6 +66,7 @@ HBRUSH CModOrderDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CModOrderDlg::OnOK()
 {
 	// TODO: Add your specialized code here and/or call the base class
+	UpdateData();
 
 	CDialogEx::OnOK();
 }

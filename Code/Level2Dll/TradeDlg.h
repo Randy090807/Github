@@ -4,10 +4,22 @@
 // CTradeDlg dialog
 #include "../Public/OperEdit.h"
 
-class CTradeInfo
+class CQTTradeInfo
 {
 public:
-	CTradeInfo(){}
+	CQTTradeInfo(){}
+	int			OrderType;
+	double		BidPrice;
+	double		AskPrice;
+	double		TopLimitPrice;
+	double		DownLimitPrice;
+	double		OpenPrice;
+	int			PriceType;
+	int			Volume;
+	int			DefaultVolume;
+	double		PriceOffset;
+	BOOL		bMaxSell;
+	CString		StockID;
 };
 
 class CTradeDlg : public CDialogEx
@@ -20,10 +32,8 @@ public:
 // Dialog Data
 //	enum { IDD = IDD_TRADE };
 	
-	void SetMode(int i);
 	BOOL Create(CWnd* pParentWnd  = NULL );
-	void Show(BOOL bShow = TRUE, CTradeInfo* pTradeInfo=NULL);
-	void SetInfo(CTradeInfo* pTradeInfo);
+	void SetInfo(CQTTradeInfo* pTradeInfo);
 	double m_dbPrice;
 	UINT m_nCount;
 	CString m_szTip;
@@ -32,7 +42,10 @@ public:
 	CEdit m_editCount;
 
 protected:
-	CTradeInfo*	m_pTradeInfo;
+	void RegisterHotKey();
+	void UnRegisterHotKey();
+	void FillData();
+	CQTTradeInfo*	m_pTradeInfo;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
@@ -43,6 +56,10 @@ public:
 	virtual void OnOK();
 	afx_msg void OnMoving(UINT fwSide, LPRECT pRect);
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	
 	afx_msg void OnPaint();
+	
+	virtual void OnCancel();
+	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	afx_msg void OnDestroy();
 };

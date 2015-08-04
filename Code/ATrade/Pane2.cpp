@@ -106,3 +106,13 @@ void CPane2::OnBnClickedBtnModify()
 	CConfig::Inst()->Level2Info()->dbLRSacle = m_dbLeftRight;
 	CConfig::Inst()->Level2Info()->dbUDSacle = m_dbUpDown;
 }
+
+BOOL CPane2::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+	{
+		return TRUE;
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

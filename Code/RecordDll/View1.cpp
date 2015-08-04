@@ -8,35 +8,12 @@
 #include "../Public/ReportCtrlLayout.h"
 #include "../Public/Application.h"
 #include "../Public/Config.h"
+#include "../Public/MsgDefine.h"
+#include "../Public/TradeInfo.h"
 
 #define ID_REPORT_CONTROL 0x103
 // CView1
 
-//
-class CView1Reord : public CXTPReportRecord
-{
-public:
-	CView1Reord()
-	{
-
-	}
-
-	void GetItemMetrics(XTP_REPORTRECORDITEM_DRAWARGS* pDrawArgs, XTP_REPORTRECORDITEM_METRICS* pItemMetrics)
-	{
-		UINT count = _ttoi(pDrawArgs->pRow->GetRecord()->GetItem(8)->GetCaption());
-		CString code = pDrawArgs->pRow->GetRecord()->GetItem(2)->GetCaption();
-
-		for (int i = 0; i < CConfig::Inst()->RecordInfo()->BOSize(); i++)
-		{
-			CRecordInfo::CBigOrderInfo* pBOI = CConfig::Inst()->RecordInfo()->Item(i);
-			if (pBOI->code.CompareNoCase(code) == 0
-				&& pBOI->count <= count)
-			{
-				pItemMetrics->clrBackground = CConfig::Inst()->RecordInfo()->clrBOColor;
-			}
-		}
-	}
-};
 //////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_DYNCREATE(CView1, CFormView)
@@ -46,6 +23,7 @@ CView1::CView1()
 , m_bCancelTip(CConfig::Inst()->RecordInfo()->bCancelTip)
 , m_bWasteResend(CConfig::Inst()->RecordInfo()->bWasteReSend)
 , m_bErrorResend(CConfig::Inst()->RecordInfo()->bErrorReSend)
+, m_pMsgReciver(NULL)
 {
 
 }
@@ -101,85 +79,10 @@ int CView1::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// TODO:  Add your specialized creation code here
 	m_wndReport.Create(WS_CHILD | WS_VISIBLE | WS_BORDER, CRect(0, 0, 0, 0), this, ID_REPORT_CONTROL);
+	m_wndReport.CreateColumns();
 
-	m_wndReport.GetReportHeader()->AllowColumnRemove(FALSE);
-	m_wndReport.SetGridStyle(TRUE, xtpReportLineStyleSolid);
-	m_wndReport.SetGridStyle(FALSE, xtpReportLineStyleSolid);
-	m_wndReport.GetReportHeader()->AllowColumnResize(TRUE);
-
-	CXTPReportColumn* pColumn = new CXTPReportColumn(0, _T("客户端订单ID"), 70, FALSE , XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(1, _T("时间"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(2, _T("代码"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(3, _T("名称"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(4, _T("方向"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(5, _T("送单价格"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(6, _T("成交价格"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(7, _T("送单股数"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(8, _T("成交股数"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(9, _T("方式"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(10, _T("成交与否"), 70, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	pColumn = new CXTPReportColumn(11, _T("信息"), 100, FALSE, XTP_REPORT_NOICON, TRUE);
-	pColumn->SetAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->SetHeaderAlignment(DT_VCENTER | DT_CENTER);
-	pColumn->EnableResize(TRUE);
-	m_wndReport.AddColumn(pColumn);
-
-	CReportCtrlLayout::Layout(CApplication::DataDir() + _T("\\layout1.xml"), &m_wndReport);
+	CReportCtrlLayout::Layout(CApplication::DataDir() + _T("\\Layout1.xml"), &m_wndReport);
+	
 	LoadData();
 	return 0;
 }
@@ -249,29 +152,7 @@ void CView1::OnInitialUpdate()
 
 void CView1::LoadData()
 {
-	m_wndReport.ResetContent(FALSE);
 
-	for (int i = 0; i < 3; i++)
-	{
-		CXTPReportRecord* pRecord = new CView1Reord();
-
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("201302931")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("13:32:49")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("600009")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("上海机场")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("买")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("89.32")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("90.28")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("1000")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("1000")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("担保品买入")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("已报")));
-		pRecord->AddItem(new CXTPReportRecordItemText(_T("没有备注")));
-
-		m_wndReport.AddRecord(pRecord);
-	}
-
-	m_wndReport.Populate();
 }
 
 void CView1::CancelOrder()
@@ -284,9 +165,16 @@ void CView1::CancelOrder()
 	}
 	if ( m_bCancelTip == TRUE)
 	{
-		if (IDYES != MessageBox(_T("提示，是否执行撤单或者批量撤单操作？"), _T("提示"), MB_YESNO | MB_ICONQUESTION))
+		if (IDYES == MessageBox(_T("提示，是否执行撤单或者批量撤单操作？"), _T("提示"), MB_YESNO | MB_ICONQUESTION))
 		{
-			return;
+			for (int i = 0; i < m_wndReport.GetSelectedRows()->GetCount(); i++)
+			{
+				COrderRecord* pRecord = (COrderRecord*)(m_wndReport.GetSelectedRows()->GetAt(i)->GetRecord());
+				CCancelOrderMsg* pMsg = new CCancelOrderMsg();
+				pMsg->OrderRef = pRecord->GetOrderRef();
+				::PostMessage(m_pMsgReciver->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+			}
+			NotifyUpdate();
 		}
 	}
 }
@@ -301,18 +189,76 @@ void CView1::ClearOrder()
 	}
 	if (m_bCancelTip == TRUE)
 	{
-		if (IDYES != MessageBox(_T("提示，是否执行全部撤单操作？"), _T("提示"), MB_YESNO | MB_ICONQUESTION))
+		if (IDYES == MessageBox(_T("提示，是否执行全部撤单操作？"), _T("提示"), MB_YESNO | MB_ICONQUESTION))
 		{
-			return;
+			for (int i = 0; i <m_wndReport.GetRecords()->GetCount(); i++)
+			{
+				COrderRecord* pRecord = (COrderRecord*)(m_wndReport.GetRecords()->GetAt(i));
+				CCancelOrderMsg* pMsg = new CCancelOrderMsg();
+				pMsg->OrderRef = pRecord->GetOrderRef();
+				::PostMessage(m_pMsgReciver->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+			}
+			NotifyUpdate();
 		}
 	}
 }
 
 void CView1::ModifyOrder()
 {
+	UpdateData();
+
+	if (m_wndReport.GetSelectedRows()->GetCount() == 0)
+	{
+		return;
+	}
+
+	COrderRecord* pRecord = (COrderRecord*)(m_wndReport.GetSelectedRows()->GetAt(0)->GetRecord());
+
+	int		count = pRecord->GetVolume();
+	double	price = pRecord->GetPrice();
+	int		left = 0;
+
 	CModOrderDlg dlg;
+	dlg.m_nCount = count;
+	dlg.m_dbPrice = price;
 	if ( dlg.DoModal() == IDOK)
 	{
+		left = count - dlg.m_nCount;
+		count = min(count, dlg.m_nCount);
+		price = dlg.m_dbPrice;
+
+		// 测销之前订单
+		{
+			CCancelOrderMsg* pMsg = new CCancelOrderMsg();
+			pMsg->OrderRef = pRecord->GetOrderRef();
+			::PostMessage(m_pMsgReciver->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+		}
+
+		// 重新下单
+		{
+			CPlaceOrderMsg* pMsg = new CPlaceOrderMsg();
+			pMsg->OrderType = _T("1a");
+			pMsg->Price = price;
+			pMsg->Volume = count;
+			pMsg->OrderRef = CTradeInfo::Inst()->NextOrderInfo();
+			pMsg->StockID = pRecord->GetStock();
+			
+			::PostMessage(m_pMsgReciver->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+		}
+
+		// 剩余数量按照涨停融券卖出
+		if ( left > 0)
+		{
+			CPlaceOrderMsg* pMsg = new CPlaceOrderMsg();
+			pMsg->OrderType = _T("1a");
+			pMsg->Price = price;
+			pMsg->Volume = left;
+			pMsg->OrderRef = CTradeInfo::Inst()->NextOrderInfo();
+			pMsg->StockID = pRecord->GetStock();
+
+			::PostMessage(m_pMsgReciver->GetSafeHwnd(), UM_SRV_DATA_REPORT, (WPARAM)pMsg, 0);
+		}
+		NotifyUpdate();
 	}
 }
 
@@ -402,3 +348,26 @@ LRESULT CView1::OnConfigRefreshNotify(WPARAM wparam, LPARAM lparam)
 	m_wndReport.RedrawControl();
 	return 0;
 }
+
+
+void CView1::Update(COrderInquiryResultMsg* pMsg)
+{
+	for (vector<COrderInquiryResultMsg::COrders*>::iterator iter = pMsg->Orders.begin();
+		iter != pMsg->Orders.end(); ++iter)
+	{
+		m_wndReport.AddRecord(*iter);
+	}
+	m_wndReport.Populate();
+}
+
+void CView1::NotifyUpdate()
+{
+	::PostMessage(m_pMsgReciver->GetSafeHwnd(), WM_USER + 0x700, 0, 0);
+}
+
+void CView1::SetMsgReciver(CWnd* pWnd)
+{
+	ASSERT(pWnd);
+	m_pMsgReciver = pWnd;
+}
+
